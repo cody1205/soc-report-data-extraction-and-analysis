@@ -5,29 +5,32 @@ If any required item is not explicitly stated, write exactly:
 
 If a section is present but ambiguous, preserve the ambiguity and do not resolve it through assumption.
 
-As part of your initial response, automatically create and provide a downloadable .txt file containing the final extracted output. Do not ask whether a .txt file should be created and do not require any follow-up instruction to generate it. The .txt file and any chat response must match exactly.
+Do not include any preamble, apology, or meta-commentary. Output only the structured result. Do not use markdown formatting (no bold, italics, backticks, code fences, or headings other than those specified below).
+
+If your environment supports file generation, also output the result as a downloadable .txt file using the filename rules below. The .txt file contents and the chat response must match exactly. If your environment does not support file generation, output the structured result in chat only and state that fact in a single line at the end. Do not ask whether a .txt file should be created and do not require any follow-up instruction to generate it.
 
 Name the .txt file using this exact format:
-Service_Organization's_Name_SOC1_Extracted_Report_Info_MONTHYYYY-MONTHYYYY.txt
+<ServiceOrganizationName>_SOC1_Extracted_Report_Info_<StartMonthYYYY>-<EndMonthYYYY>.txt
 
 Filename rules:
 - Use the service organization's name exactly as stated in the report for identification purposes, but when building the filename:
   - replace all spaces with underscores (_)
-  - remove commas and all other punctuation
+  - remove commas, periods, apostrophes, ampersands, slashes, and all other punctuation
   - keep only letters, numbers, and underscores in the service organization name portion
   - do not allow spaces or %20 in the filename
-- Use the SOC report coverage start month and year as the first MONTHYYYY value.
-- Use the SOC report coverage end month and year as the second MONTHYYYY value.
-- Format each date token as MonthAbbreviationOrMonthNameYYYY, such as Sept2024, March2025, Dec2025, or June2025.
+- Use the SOC report coverage start month and year as the first <MonthYYYY> value.
+- Use the SOC report coverage end month and year as the second <MonthYYYY> value.
+- Format each date token as the full month name followed by the 4-digit year, with no separator (e.g., October2024, March2025, December2025, June2025). Do not abbreviate.
 - Join the two date tokens with a hyphen.
 - If the service organization's name is not explicitly stated, use Unknown_Service_Organization in the filename.
 - If the report coverage start or end date is not explicitly stated, use UnknownPeriod for the missing portion of the filename.
 
 Example filenames:
-- BlackLine_Systems_Inc_SOC1_Extracted_Report_Info_Oct2024-March2025.txt
-- Unknown_Service_Organization_SOC1_Extracted_Report_Info_Oct2024-March2025.txt
+- BlackLine_Systems_Inc_SOC1_Extracted_Report_Info_October2024-March2025.txt
+- Acme_Co_LLC_SOC1_Extracted_Report_Info_January2024-December2024.txt   (original name: "Acme Co., LLC")
+- Unknown_Service_Organization_SOC1_Extracted_Report_Info_October2024-March2025.txt
 - BlackLine_Systems_Inc_SOC1_Extracted_Report_Info_UnknownPeriod-March2025.txt
-- BlackLine_Systems_Inc_SOC1_Extracted_Report_Info_Oct2024-UnknownPeriod.txt
+- BlackLine_Systems_Inc_SOC1_Extracted_Report_Info_October2024-UnknownPeriod.txt
 - Unknown_Service_Organization_SOC1_Extracted_Report_Info_UnknownPeriod-UnknownPeriod.txt
 
 Return the result as plain text only in the exact order and structure below.
@@ -44,8 +47,9 @@ Subservice organizations:
    - Status: [Carved out / Inclusive / Does not mention whether carved out or inclusive]
    - Explanation: [Provide a detailed explanation based only on the report text. Where explicitly available, describe: (1) what services the subservice organization provides, (2) how the report describes the relationship of the subservice organization to the system, (3) whether the report states that controls at the subservice organization are excluded, included, or otherwise addressed, and (4) any explicit page, paragraph, sentence, section, or testing references that support the conclusion. Write the explanation as a short audit-workpaper-style narrative and end with a clear statement of why the subservice organization is categorized as carved out, inclusive, or not explicitly described as either. If page, paragraph, sentence, section, or testing references are not explicitly identifiable, do not infer them.]
 [repeat for all subservice organizations]
+[If the report does not list any subservice organizations, write exactly: "None explicitly stated in the report." under this heading and omit the numbered list.]
 
-Date range covered by the SOC report: [Month Day, Year to Month Day, Year]
+Date range covered by the SOC report: [Reproduce the date range exactly as stated in the report. If the report gives full dates, use "Month Day, Year to Month Day, Year". If only month and year are stated, use "Month Year to Month Year". Use the connector word the report uses ("to" or "through"). Do not normalize or reformat beyond what the report provides.]
 
 Opinion expressed by the service auditor: [Unmodified / Modified / Disclaimer / Other]
 
@@ -54,19 +58,25 @@ Opinion explanation: [Provide brief support based only on the report text.]
 COMPLEMENTARY USER ENTITY CONTROLS
 1. [full CUEC text]
    - Control area: [control area or "Control area not explicitly stated."]
-[repeat for all CUECs]
+[repeat for all CUECs, preserving the order in which they appear in the report]
+[If the report does not list any CUECs, write exactly: "None explicitly stated in the report." under this heading and omit the numbered list.]
 
 COMPLEMENTARY USER ENTITY CONTROLS - FOR COPY AND PASTE INTO TESTING
 [text of first complementary user entity control]
 [text of second complementary user entity control]
 [text of third complementary user entity control]
-[repeat for all CUECs, with each CUEC on its own line and no numbering, bullet, dash, label, quotation marks, or other leading character]
+[repeat for all CUECs, in the same order as the structured section above, with each CUEC on its own line and no numbering, bullet, dash, label, quotation marks, or other leading character]
+[If the report does not list any CUECs, write exactly: "None explicitly stated in the report." and nothing else under this heading.]
 
 Classification rules:
 - Use "Carved out" only if the report explicitly states the carve-out method, excludes controls of the subservice organization, or otherwise clearly indicates that the subservice organization is carved out.
 - Use "Inclusive" only if the report explicitly states the inclusive method, includes controls of the subservice organization, or otherwise clearly indicates that the subservice organization is inclusive.
 - If neither is explicitly stated, use: "Does not mention whether carved out or inclusive."
-- Classify the opinion as Unmodified, Modified, Disclaimer, or Other only if the report text explicitly supports that classification.
+- Classify the opinion using this mapping of standard report wording:
+  - Unmodified: standard "in our opinion ... is fairly presented, in all material respects" language with no qualifying clause.
+  - Modified: contains an "except for" clause or other qualifying language that limits the opinion.
+  - Disclaimer: the auditor states they do not express an opinion or are unable to express an opinion.
+  - Other: opinion language that does not fit any of the above (e.g., adverse opinion or unusual wording).
 - If the opinion is classified as Other, briefly explain why it does not fit Unmodified, Modified, or Disclaimer based only on the report wording.
 
 Additional guidance for subservice organization explanations:
@@ -77,22 +87,26 @@ Additional guidance for subservice organization explanations:
 - Do not conclude that a subservice organization is in scope, out of scope, carved out, or inclusive unless the report explicitly supports that conclusion.
 - Do not add explanatory language based on general SOC knowledge or assumptions.
 
+Additional guidance for the "COMPLEMENTARY USER ENTITY CONTROLS" section:
+- Quote each CUEC verbatim from the report. Do not paraphrase, renumber, or reformat.
+- Preserve the internal punctuation of each CUEC, but do not include any leading bullet, number, or label from the original report.
+- "Control area" means the heading, subheading, or section under which the CUEC appears in the report (for example, "Logical Access", "Change Management", "Data Processing"). If the CUEC is not grouped under such a heading in the report, write "Control area not explicitly stated."
+
 Additional guidance for the "COMPLEMENTARY USER ENTITY CONTROLS - FOR COPY AND PASTE INTO TESTING" section:
 - List only the text of each CUEC.
 - Put each CUEC on its own separate line.
 - Do not include the control area.
 - Do not insert blank commentary or extra blank lines between CUECs.
-- Preserve the exact CUEC wording from the report to the extent explicitly stated.
+- Preserve the exact CUEC wording from the report.
 - Format the section so that each CUEC is separated only by a single line break, allowing direct paste into Excel with one CUEC per row.
 
 Completeness check before final output:
 - Confirm the SOC Report Title is included if explicitly stated.
-- Confirm all subservice organizations mentioned anywhere in the report are listed.
-- Confirm all CUECs listed anywhere in the report are included.
-- Confirm every CUEC listed in the "COMPLEMENTARY USER ENTITY CONTROLS" section also appears in the "COMPLEMENTARY USER ENTITY CONTROLS - FOR COPY AND PASTE INTO TESTING" section.
+- Confirm all subservice organizations mentioned anywhere in the report are listed. Re-scan the report for the words "subservice", "sub-service", and "carved out" to confirm nothing was missed.
+- Confirm all CUECs listed anywhere in the report are included. Re-scan the report for the words "complementary", "user entity", and "user organization" to confirm nothing was missed.
+- Confirm every CUEC listed in the "COMPLEMENTARY USER ENTITY CONTROLS" section also appears in the "COMPLEMENTARY USER ENTITY CONTROLS - FOR COPY AND PASTE INTO TESTING" section, in the same order.
 - Do not omit repeated or separately grouped CUECs unless they are exact duplicates.
-- Keep the output in plain text, not a table.
-- Ensure the .txt file is generated automatically as part of the initial response.
+- Keep the output in plain text, not a table, and without markdown formatting.
+- Ensure the .txt file is generated automatically as part of the initial response when the environment supports it.
 - Ensure the filename follows this exact format:
-  Service_Organization's_Name_SOC1_Extracted_Report_Info_MONTHYYYY-MONTHYYYY.txt
-``
+  <ServiceOrganizationName>_SOC1_Extracted_Report_Info_<StartMonthYYYY>-<EndMonthYYYY>.txt
